@@ -7,4 +7,7 @@
 - [Assembling Assebly](assembly.md)
 - [Execution in Gem5](execution_in_gem5.md)
 ---
-[[Assembly Test Scripts]]
+[Assembly Test Scripts](Assembly_Test_Scripts.md)
+
+---
+![[Bit Field Diagrams.svg]]
