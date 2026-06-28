@@ -7,3 +7,4 @@
 - [Assembling Assebly](assembly.md)
 - [Execution in Gem5](execution_in_gem5.md)
 ---
+[[Assembly Test Scripts]]
