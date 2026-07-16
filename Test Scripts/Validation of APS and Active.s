@@ -11,9 +11,9 @@ target:	# Handler Address
 	csrw 0x805, t1
 	
 	
-	apret zero, zero			# Should have pseudo-instruction 
+	apret								# Pseudo-instruction for `apret zero, 0`
 
-.global _start					# Standard way of telling the linking the baremetal code starts here.
+.global _start							# Standard way of telling the linking the baremetal code starts here.
 _start:
 
 csrwi 0x800, 1
