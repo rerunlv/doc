@@ -6,14 +6,21 @@
 .equ mach_act_sem, 		0x80000003		# This is the & of aps_mask and mach_active
 
 target:									# Handler Address
-	li t0, 8
-	li t1, mach_act_sem
-	csrw APCTRL, t1
+	addi t0, t0, 1
+
+	bgt t2, zero, skip					# while t2 > 0, don't set APS
 	
+	li t1, mach_act_sem					# Setting the APS with `active`
+	csrw APCTRL, t1
+
+skip:
+	addi t2, t2, -1						
 	apret								# Pseudo-instruction for `apret zero, 0`
 
 .global _start							# Standard way of telling the linking the baremetal code starts here.
 _start:
+
+li t2, 8
 
 csrwi APSTATUS, 1
 csrwi APSELECT, 0
@@ -26,7 +33,7 @@ la t1, trigger
 csrw APTRIG, t1
 
 li a0, 0
-li t0, 1
+li t0, 0
 
 trigger:
 	add a0, a0, t0

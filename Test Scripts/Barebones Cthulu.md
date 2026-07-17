@@ -8,7 +8,7 @@
 
 .equ mach_inactive, 	0x80000000		# Here, the '8' represents a one in the M position of APCTRL
 .equ mach_active, 		0x80000001	
-.equ aps_mask,			0x00000002	# This is the bitmask for the semaphore of the anticipation point.
+.equ aps_mask,			0x00000002		# This is the bitmask for the semaphore of the anticipation point.
 
 target:	# Handler Address
 	li t0, 8
@@ -16,7 +16,7 @@ target:	# Handler Address
 	li a7, 93
 	ecall
 
-.global _start					# Standard way of telling the linking the baremetal code starts here.
+.global _start							# Standard way of telling the linking the baremetal code starts here.
 _start:
 
 csrwi 0x800, 1
