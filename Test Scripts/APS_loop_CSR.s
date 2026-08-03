@@ -1,9 +1,9 @@
 .text
 
 .equ mach_inactive, 	0x80000000		# Here, the '8' represents a one in the M position of APCTRL
-.equ mach_active, 		0x80000001		# The '1' is the "active" bit of APCTRL
+.equ mach_active, 		0x80000001		# The '0' is the "active" bit of APCTRL
 .equ aps_mask,			0x00000002		# This is the bitmask for the semaphore of the anticipation point.
-.equ mach_act_sem, 		0x80000003		# This is the & of aps_mask and mach_active
+.equ mach_act_sem, 		0x80000005		# This is the & of aps_mask and mach_active
 
 target:									# Handler Address
 	addi t0, t0, 1
@@ -11,26 +11,26 @@ target:									# Handler Address
 	bgt t2, zero, skip					# while t2 > 0, don't set APS
 	
 	li t1, mach_act_sem					# Setting the APS with `active`
-	csrw 0x805, t1
+	csrw apctrl, t1
 
 skip:
-	addi t2, t2, -1						
-	apret								# Pseudo-instruction for `apret zero, 0`
+	addi t2, t2, -1			
+	apret zero, 0								# Pseudo-instruction for `apret zero, 0`
 
 .global _start							# Standard way of telling the linking the baremetal code starts here.
 _start:
 
 li t2, 8
 
-csrwi 0x800, 1
-csrwi 0x804, 0
+csrwi apstatus, 1
+csrwi apselect, 0
 li t1, mach_active
-csrw 0x805, t1
+csrw apctrl, t1
 la t1, target
-csrw 0x807, t1
+csrw aptar, t1
 
 la t1, trigger
-csrw 0x806, t1
+csrw aptrig, t1
 
 li a0, 0
 li t0, 0
