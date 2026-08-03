@@ -1,6 +1,6 @@
 # RERUN Anticipation Mechanism Documentation
 
-- [Building Gem5](building_gem5.md)
+- [Building Gem5](building_gem5.md](https://github.com/rerunlv/doc/wiki/Building-RISCV%E2%80%90GNU%E2%80%90Toolchain)
 - [Building RISCV-GNU-Toolchain](building_riscv_gnu_toolchain.md)
 - [Assembling Assebly](assembly.md)
 - [Execution in Gem5](execution_in_gem5.md)
