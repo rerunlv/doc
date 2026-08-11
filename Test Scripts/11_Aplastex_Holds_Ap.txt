@@ -1,0 +1,9 @@
+**** REAL SIMULATION ****
+  -> Lane 0: Ctrl = 0x80000000 | Trig = 0x0 | Tar = 0x0
+  -> Lane 1: Ctrl = 0x80000000 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x80000000 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x80000000 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x80000000 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x80000001 | Trig = 0x1010e | Tar = 0x100b0
+  *** TRIGGER MATCHED! Redirecting to 0x100b0 ***
+Exiting @ tick 51500 because exiting with last active thread context
