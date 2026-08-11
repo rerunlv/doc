@@ -15,7 +15,7 @@ target:									# Handler Address
 
 skip:
 	addi t2, t2, -1			
-	apret zero, 0								# Pseudo-instruction for `apret zero, 0`
+	apret zero, 0						# Pseudo-instruction for `apret zero, 0`
 
 .global _start							# Standard way of telling the linking the baremetal code starts here.
 _start:

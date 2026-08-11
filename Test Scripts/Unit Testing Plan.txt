@@ -1,0 +1,60 @@
+Here's a test matrix, organized roughly from "core mechanics" outward to edge cases. Since you're deferring privilege mask and Rev/APCnt, I've kept those separate at the end.
+
+**Trigger semantics**
+
+1. Preemption fires when PC matches APTRIG and the AP is active (your barebones test).
+2. Preemption fires *before* the trigger instruction executes — verify no architectural side effects from the anticipated instruction (destination register unchanged, no memory write, no CSR effect if the trigger is a CSR op).
+3. No preemption when `active` = 0, even with PC match.
+4. No preemption when APIE = 0, even with the AP active.
+5. Trigger address reached by different control paths: fall-through, forward branch, backward branch (loop), `jal`/`jalr`, and as a branch *target* — all should fire identically.
+6. PC *near* but not equal to APTRIG (e.g., trigger+4, or an address inside a compressed pair if you support RVC) does not fire. If RVC is in scope: what happens when APTRIG points at the second half of a 4-byte instruction.
+7. Trigger on the very first instruction after `_start`, and trigger address = target address (pathological but should be defined).
+
+**Preemption side effects (the atomic bundle)**
+
+8. `pending` is set on trigger, readable in the handler, and is read-only — writes from software are ignored (or trap, per your spec — but pick one and test it).
+9. APIE is cleared on entry (no nested anticipation while in the handler).
+10. APEPC holds the trigger address (not trigger+4, not the target).
+11. APLASTEX holds the index of the firing AP — meaningful once you test with two APs (see below).
+12. All GPRs are untouched by the preemption itself — the handler sees exactly the interrupted thread's state.
+
+**APRET semantics**
+
+13. `apret` atomically: clears `pending`, sets APIE, sets PC = APEPC. Verify each individually (e.g., read pending from post-return code path via a second AP, or check APIE after return).
+14. After `apret` with APS set: the trigger instruction executes exactly once, and APS is cleared by that execution (read APCTRL afterward to confirm the hardware reset it).
+15. After `apret` with APS clear: immediate re-trigger, handler re-entered, no execution of the trigger instruction (your loop test — but explicitly verify t0's increment count vs. a0's contribution to distinguish "executed n times" from "executed once after n bounces").
+16. APS admits exactly one execution: after the admitted execution, if PC reaches the trigger again (loop), it preempts again. Your loop test partially covers this; a two-iteration outer loop covers it fully.
+17. Handler modifies APEPC before `apret` → execution resumes at the new address (the "redirect to scheduler" path from the proposal). Verify the trigger instruction did *not* execute in this case.
+18. `apret` executed outside of a pending anticipation (cold, from normal code) — decide and verify the behavior: no-op, illegal instruction, or jump to stale APEPC. This will bite you later if undefined.
+19. APS set manually by software *before* any trigger: first PC match should execute the instruction and clear APS without ever entering the handler (bypass semantics). If that's not the intent, define what is.
+
+**APSCRATCH**
+
+20. Write in handler, read after return; write outside handler, read inside — plain read/write round-trip, survives apret.
+
+**APSELECT / multiple APs**
+
+21. APSELECT redirects APCTRL/APTRIG/APTAR — write AP0's registers, switch to AP1, verify reads don't see AP0's values, switch back, verify AP0's values persisted.
+22. Two APs active with different triggers: each fires independently, APLASTEX distinguishes them.
+23. AP1's trigger located *inside* AP0's handler: since APIE is cleared during the handler, it must not fire — but should it fire after `apret` restores APIE if execution later passes that address? Define and test.
+24. Two APs with the *same* trigger address: which fires, or both in sequence? Needs a defined priority (e.g., lowest index) and a test pinning it.
+25. Out-of-range APSELECT index: reads/writes to the windowed CSRs should do something defined (zero, ignore, trap).
+26. Changing APSELECT while an AP is pending doesn't corrupt the pending AP's state.
+
+**CSR access mechanics**
+
+27. All Zicsr op flavors against your CSRs: csrrw/csrrs/csrrc and immediate forms — especially set/clear-bit ops on APCTRL, since the semaphore workflow depends on read-modify-write behavior against a register with a read-only bit (pending) in the middle.
+28. Reserved bits of APCTRL and APSTATUS: write ones, read back — should read as zero (WPRI/WARL behavior, whichever you've chosen).
+29. Read of APCTRL while pending=1 inside the handler returns the true hardware state (not a stale shadow).
+
+**Interaction with existing machinery**
+
+30. Anticipation vs. a real trap: trigger instruction is an `ecall` or an instruction that faults (misaligned load, access fault). Anticipation should win (fires before execution), and the fault should occur only on the admitted execution.
+31. A standard M-mode interrupt arriving while in the anticipation handler: does it preempt the handler, and does `mret` from *that* handler return correctly into your handler with anticipation state intact?
+32. Trigger instruction is itself a branch/jump: after admitted execution, control flow follows the branch normally.
+33. Trigger instruction is a CSR write to one of the AP CSRs (self-referential; e.g., it disables its own AP). Pathological, but Gem5 will do *something* — better to know what.
+
+**Deferred (once you add them)**
+
+34. Privilege mask: AP active only in masked modes; PC match in an unmasked mode is transparent.
+35. APCnt/Rev: whatever multi-count semaphore semantics replace the one-bit APS — the loop test generalizes directly (set count n, expect n bypasses).
