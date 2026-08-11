@@ -58,13 +58,15 @@ _start:
 
 csrwi apstatus, 1
 csrwi apselect, 0
-li t1, mach_active
-csrw apctrl, t1
+
 la t1, target
 csrw aptar, t1
 
 la t1, trigger
 csrw aptrig, t1
+
+li t1, mach_active
+csrw apctrl, t1
 
 li a0, 0
 li t0, 0								# if anticipation never fires, a0 stays 0
