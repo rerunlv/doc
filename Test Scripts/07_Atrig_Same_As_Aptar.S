@@ -4,9 +4,11 @@
 #
 # Exit codes:
 #   0 = Pass preemption updated APEPC
-#   1 = Fail address reached without preemption
+#   1 = Fail address reached without preemption (APEPC)
+#   2 = Fail address reached without preemption (APIE)
 
 .equ mach_active, 0x80000001
+.equ mach_inactive, 0x80000000
 
 .global _start
 
@@ -29,6 +31,11 @@ trigger_target:
     csrr t2, apepc
     la t3, trigger_target
     bne t2, t3, fail
+	
+	csrr t2, apstatus
+	li t3, 0
+	bne t2, t3, fail2
+	
 
 pass:
     li a0, 0
@@ -39,3 +46,8 @@ fail:
     li a0, 1
     li a7, 93
     ecall
+	
+fail2:
+    li a0, 2
+    li a7, 93
+    ecall	
