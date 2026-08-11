@@ -21,7 +21,8 @@
 #   6 = Trigger instruction never executed
 
 .equ mach_active, 0x80000001
-.equ aps_mask,    0x00000005
+.equ aps_mask,    0x00000004
+.equ active_mask, 0x00000001
 
 .global _start
 
@@ -65,7 +66,7 @@ second_handler_entry:
 
     # It must have executed exactly once.
     li t0, 1
-    bne s0, t0, trigger_multiple_times
+    bne s0, t0, trigger_multiple_times_2
 
     # APS must have been cleared by the admitted execution.
     csrr t0, apctrl
@@ -100,19 +101,28 @@ _start:
     la t0, trigger
     csrw aptrig, t0
 
+    la t0, trigger
+    csrw aptrig, t0
+
+loop_entry:
+    # This address is not APTRIG.
+    nop
 
 trigger:
     # APS should admit this instruction exactly once.
     addi s0, s0, 1
 
-    # Detect execution more than once before looping.
+    # Active clear check
+    csrr t1, apctrl
+    andi t1, t1, active_mask
+    beqz t1, active_clear_failure
+
+    # The trigger instruction must execute exactly once.
     li t0, 1
     bne s0, t0, trigger_multiple_times
 
-    # Reach APTRIG again. APS should now be clear, so this
-    # should preempt before addi executes a second time.
-    j trigger
-
+    # Jump above APTRIG, then reach it again by fall-through.
+    j loop_entry
 
 initial_preemption_failure:
     li a0, 1
@@ -125,6 +135,10 @@ trigger_multiple_times:
     li a7, 93
     ecall
 
+trigger_multiple_times_2:
+    li a0, 7
+    li a7, 93
+    ecall
 
 handler_count_failure:
     li a0, 3
@@ -143,8 +157,12 @@ aps_set_failure:
     li a7, 93
     ecall
 
-
 trigger_never_executed:
     li a0, 6
+    li a7, 93
+    ecall
+
+active_clear_failure:
+    li a0, 11
     li a7, 93
     ecall
