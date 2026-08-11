@@ -4,8 +4,8 @@ gem5 is copyrighted software; use the --copyright option for details.
 
 gem5 version 25.1.0.1
 gem5 compiled Jul 16 2026 16:37:17
-gem5 started Aug 11 2026 00:11:16
-gem5 executing on RERUNLV, pid 21011
+gem5 started Aug 11 2026 01:11:30
+gem5 executing on RERUNLV, pid 21466
 command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs/deprecated/example/se.py -c 08_Pending_ReadOnly
 
 **** REAL SIMULATION ****
@@ -41,7 +41,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -49,7 +49,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -57,7 +57,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -65,7 +65,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x10170 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -73,7 +73,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x0 | Tar = 0x100b0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x10170 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -81,7 +81,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x0 | Tar = 0x100b0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x10170 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -89,7 +89,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x0 | Tar = 0x100b0
+  -> Lane 0: Ctrl = 0x0 | Trig = 0x10170 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -97,7 +97,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10146 | Tar = 0x100b0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10170 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -105,7 +105,7 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10146 | Tar = 0x100b0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10170 | Tar = 0x100b0
   -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -113,7 +113,15 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
-  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10146 | Tar = 0x100b0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10170 | Tar = 0x100b0
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x10170 | Tar = 0x100b0
   *** TRIGGER MATCHED! Redirecting to 0x100b0 ***
-Exiting @ tick 15500 because exiting with last active thread context
-Simulated exit code not 0! Exit code is 1
+Exiting @ tick 20500 because exiting with last active thread context
+Simulated exit code not 0! Exit code is 3
