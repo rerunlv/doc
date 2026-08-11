@@ -1,6 +1,6 @@
 .text
 
-# Test 8 (rev 2): `pending` semantics per clarified spec -- pending is set when
+# Test 8: `pending` semantics per clarified spec -- pending is set when
 # this AP's trigger address is executed while inside its own handler (APIE=0).
 # It must NOT be set on a clean take, must be readable in the handler, and must
 # be read-only.
