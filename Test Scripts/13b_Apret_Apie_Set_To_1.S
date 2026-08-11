@@ -3,7 +3,7 @@
 # Test 13b: Apret sets APIE set to 1
 #
 # Exit codes:
-#   0 = PASS, Apret redirects to APEPC
+#   0 = Pass, Apret redirects to APEPC
 #   1 = Fail, APIE set to 0
 #   2 = Fail, Apret did not redirect to APEPC
 

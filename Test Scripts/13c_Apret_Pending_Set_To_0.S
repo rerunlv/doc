@@ -3,9 +3,9 @@
 # Test 13c: APRET clears APCTRL`s pending to 1
 #
 # Exit codes:
-#   0 = PASS: pending cleared
-#   1 = FAIL: pending still set
-#   2 = FAIL: APRET did not reach APEPC
+#   0 = Pass, pending cleared
+#   1 = Fail, pending still set
+#   2 = Fail, APRET did not reach APEPC
 
 .equ mach_active_pending, 0x80000003
 .equ pending_mask,       0x00000002
