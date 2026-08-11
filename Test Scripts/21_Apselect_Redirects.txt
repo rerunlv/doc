@@ -1,0 +1,2 @@
+**** REAL SIMULATION ****
+Exiting @ tick 18000 because exiting with last active thread context
