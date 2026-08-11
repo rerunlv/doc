@@ -1,13 +1,12 @@
 .text
 
-# Test 3: No preemption when `active` = 0, even with PC match.
+# Test 4: No preemption when APIE = 0, even with AP active
 # 
 # Exit codes:
-#   0 = PASS
-#   1 = Jumps to trigger
-#   2 = Jumps to target
+#   0 = PASS, trigger reached without preemption
+#   1 = Jumps to target
 
-.equ mach_inactive, 0x80000000
+.equ mach_active, 0x80000001
 
 .global _start
 
@@ -18,13 +17,13 @@ target:
     ecall
 
 _start:
-
-    csrwi apstatus, 1
+    # Set APIE not active
+    csrwi apstatus, 0
 
     csrwi apselect, 0
 
-    # Set AP not active
-    li t1, mach_inactive
+    # Set AP active
+    li t1, mach_active
     csrw apctrl, t1
 
     la t1, target
