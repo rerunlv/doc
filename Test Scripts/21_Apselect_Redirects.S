@@ -12,6 +12,8 @@
 .global _start
 
 _start:
+    csrwi apstatus, 1
+
     csrwi apselect, 0
 
     li t0, ap0_ctrl

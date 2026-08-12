@@ -26,6 +26,7 @@ handler1:
 _start:
     csrwi apstatus, 1
 
+    # Configure AP0/AP1 to same trigger
     csrwi apselect, 0
     li t0, mach_active
     csrw apctrl, t0

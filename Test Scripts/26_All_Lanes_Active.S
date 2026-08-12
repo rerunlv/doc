@@ -1,118 +1,123 @@
 .text
 
-# Test: Fill and verify all eight AP lanes
+# Test: All eight AP lanes preempt independently
 #
-# Values:
-#   APCTRL[i] = 0x80000000 | i
-#   APTRIG[i] = 0x1000 + (i * 0x100)
-#   APTAR[i]  = 0x2000 + (i * 0x100)
+# Each lane has:
+#   - active = 1
+#   - a unique APTRIG
+#   - the common handler as APTAR
+#
+# Expected firing order:
+#   AP0, AP1, AP2, AP3, AP4, AP5, AP6, AP7
 #
 # Exit codes:
 #   0 = PASS
-#   1 = APCTRL mismatch
-#   2 = APTRIG mismatch
-#   3 = APTAR mismatch
+#   1 = APLASTEX reported the wrong lane
+#   2 = Not all eight APs fired
 
 .equ number_of_lanes, 8
-.equ mode_bits,       0x80000000
-.equ trig_base,       0x00001000
-.equ target_base,     0x00002000
+.equ mach_active,     0x80000001
+.equ aps_mask,        0x00000004
 
 .global _start
 
-_start:
-    csrwi apstatus, 0
 
-    # Fill every lane
+# Configure one AP lane.
+.macro configure_lane lane, trigger_address
+    csrwi apselect, \lane
 
-    li s0, 0                       # Lane index
-
-write_loop:
-    csrw apselect, s0
-
-    # APCTRL = 0x80000000 | lane
-    li t0, mode_bits
-    or t0, t0, s0
+    li t0, mach_active
     csrw apctrl, t0
 
-    # Offset = lane * 0x100
-    slli t1, s0, 8
-
-    # APTRIG = 0x1000 + offset
-    li t0, trig_base
-    add t0, t0, t1
+    la t0, \trigger_address
     csrw aptrig, t0
 
-    # APTAR = 0x2000 + offset
-    li t0, target_base
-    add t0, t0, t1
+    la t0, common_handler
     csrw aptar, t0
+.endm
 
+
+common_handler:
+    # APLASTEX must equal the next expected lane index.
+    csrr t0, aplastex
+    bne t0, s0, wrong_aplastex
+
+    # Count this lane as successfully fired.
     addi s0, s0, 1
-    li t0, number_of_lanes
-    blt s0, t0, write_loop
 
-    # Read and verify every lane
+    # Select the lane that caused this preemption.
+    csrw apselect, t0
 
+    # Set APS for that lane without changing its other fields.
+    # This allows its trigger instruction to execute once after APRET.
+    csrr t1, apctrl
+    ori  t1, t1, aps_mask
+    csrw apctrl, t1
+
+    apret
+
+
+_start:
+    # Prevent preemption during configuration.
+    csrwi apstatus, 0
+
+    # Next expected lane index and total preemption count.
     li s0, 0
 
-verify_loop:
-    csrw apselect, s0
+    configure_lane 0, trigger0
+    configure_lane 1, trigger1
+    configure_lane 2, trigger2
+    configure_lane 3, trigger3
+    configure_lane 4, trigger4
+    configure_lane 5, trigger5
+    configure_lane 6, trigger6
+    configure_lane 7, trigger7
 
-    # Verify APCTRL.
-    csrr t0, apctrl
+    # Enable anticipation after all lanes are configured.
+    csrwi apstatus, 1
 
-    li t1, mode_bits
-    or t1, t1, s0
 
-    bne t0, t1, apctrl_failure
+trigger0:
+    nop
 
-    # Calculate lane offset.
-    slli t2, s0, 8
+trigger1:
+    nop
 
-    # Verify APTRIG.
-    csrr t0, aptrig
+trigger2:
+    nop
 
-    li t1, trig_base
-    add t1, t1, t2
+trigger3:
+    nop
 
-    bne t0, t1, aptrig_failure
+trigger4:
+    nop
 
-    # Verify APTAR.
-    csrr t0, aptar
+trigger5:
+    nop
 
-    li t1, target_base
-    add t1, t1, t2
+trigger6:
+    nop
 
-    bne t0, t1, aptar_failure
+trigger7:
+    nop
 
-    addi s0, s0, 1
+    # All eight handlers must have executed.
     li t0, number_of_lanes
-    blt s0, t0, verify_loop
-
+    bne s0, t0, incomplete_failure
 
 pass:
-    # Restore lane 0 as the selected lane.
-    csrwi apselect, 0
-
     li a0, 0
     li a7, 93
     ecall
 
 
-apctrl_failure:
+wrong_aplastex:
     li a0, 1
     li a7, 93
     ecall
 
 
-aptrig_failure:
+incomplete_failure:
     li a0, 2
-    li a7, 93
-    ecall
-
-
-aptar_failure:
-    li a0, 3
     li a7, 93
     ecall
