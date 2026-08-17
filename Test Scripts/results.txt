@@ -1,0 +1,30 @@
+=== Gem5 Test Run Results (Mon Aug 17 11:43:54 PM UTC 2026) ===
+Source File                                   Status          Exit Code
+----------------------------------------------------------------------
+01_AP_Active_Trigger_Preemption.S             SUCCESS         0
+02_Preemption_Before_Trigger_Instruction.S    SUCCESS         0
+03_AP_Not_Active.S                            SUCCESS         0
+04_APIE_Not_Active.S                          SUCCESS         0
+05a_Different_Control_Path_ForwardBranch.S    SUCCESS         0
+05b_Different_Control_Path_BackwardBranch.S   SUCCESS         0
+05c_Different_Control_Path_Jal.S              SUCCESS         0
+05d_Different_Control_Path_Jalr.S             SUCCESS         0
+07_Atrig_Same_As_Aptar.S                      SUCCESS         0
+08_Pending_ReadOnly.s                         FAILED          3
+09_APIE_Cleared_On_Entry.s                    SUCCESS         0
+11_Aplastex_Holds_Ap.S                        SUCCESS         0
+13a_Apret_PC_Set_To_APEPC.S                   SUCCESS         0
+13b_Apret_Apie_Set_To_1.S                     SUCCESS         0
+13c_Apret_Pending_Set_To_0.S                  FAILED          1
+14_Apret_Triggers_Once.S                      SUCCESS         0
+15_APS_loop_CSR.s                             FAILED          9
+16b_Validation_of_APS_and_Active.s            FAILED          2
+16_Multiple_Preemptions.S                     FAILED          11
+21_Apselect_Redirects.S                       SUCCESS         0
+22_Two_Aps_Different_Triggers.S               SUCCESS         0
+24_Same_Trigger.S                             SUCCESS         0
+25_Out_Of_Range_Apselect.S                    SUCCESS         0
+26_All_Lanes_Active.S                         SUCCESS         0
+30_Anticipate_Before_Ecall.S                  SUCCESS         0
+APS_loop.s                                    TIMEOUT         124
+Validation of APS and Active.s                COMPILE_FAIL    1

@@ -1,12 +1,18 @@
+warn: The se.py script is deprecated. It will be removed in future releases of  gem5.
 Global frequency set at 1000000000000 ticks per second
+src/mem/dram_interface.cc:690: warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (512 Mbytes)
+src/arch/riscv/isa.cc:332: info: RVV enabled, VLEN = 256 bits, ELEN = 64 bits
+src/arch/riscv/linux/se_workload.cc:73: warn: Unknown operating system; assuming Linux.
+src/base/statistics.hh:279: warn: One of the stats is a legacy stat. Legacy stat is a stat that does not belong to any statistics::Group. Legacy stat is deprecated.
+system.remote_gdb: Listening for connections on port 7000
 gem5 Simulator System.  https://www.gem5.org
 gem5 is copyrighted software; use the --copyright option for details.
 
 gem5 version 25.1.0.1
-gem5 compiled Jul 16 2026 16:37:17
-gem5 started Aug 11 2026 06:34:35
-gem5 executing on RERUNLV, pid 34755
-command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs/deprecated/example/se.py -c 07_Atrig_Same_As_Aptar
+gem5 compiled Aug 17 2026 23:20:19
+gem5 started Aug 17 2026 23:43:58
+gem5 executing on RERUNLV, pid 6804
+command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs/deprecated/example/se.py -c ./07_Atrig_Same_As_Aptar.elf
 
 **** REAL SIMULATION ****
   -> Lane 0: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0

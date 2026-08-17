@@ -1,0 +1,7 @@
+./Validation of APS and Active.s: Assembler messages:
+./Validation of APS and Active.s:11: Error: unknown CSR `APCTRL'
+./Validation of APS and Active.s:18: Error: unknown CSR `APSTATUS'
+./Validation of APS and Active.s:19: Error: unknown CSR `APSELECT'
+./Validation of APS and Active.s:21: Error: unknown CSR `APCTRL'
+./Validation of APS and Active.s:23: Error: unknown CSR `APTAR'
+./Validation of APS and Active.s:26: Error: unknown CSR `APTRIG'

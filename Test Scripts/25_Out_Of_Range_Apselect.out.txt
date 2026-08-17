@@ -1,0 +1,18 @@
+warn: The se.py script is deprecated. It will be removed in future releases of  gem5.
+Global frequency set at 1000000000000 ticks per second
+src/mem/dram_interface.cc:690: warn: DRAM device capacity (8192 Mbytes) does not match the address range assigned (512 Mbytes)
+src/arch/riscv/isa.cc:332: info: RVV enabled, VLEN = 256 bits, ELEN = 64 bits
+src/arch/riscv/linux/se_workload.cc:73: warn: Unknown operating system; assuming Linux.
+src/base/statistics.hh:279: warn: One of the stats is a legacy stat. Legacy stat is a stat that does not belong to any statistics::Group. Legacy stat is deprecated.
+system.remote_gdb: Listening for connections on port 7000
+gem5 Simulator System.  https://www.gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 version 25.1.0.1
+gem5 compiled Aug 17 2026 23:20:19
+gem5 started Aug 17 2026 23:44:05
+gem5 executing on RERUNLV, pid 7011
+command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs/deprecated/example/se.py -c ./25_Out_Of_Range_Apselect.elf
+
+**** REAL SIMULATION ****
+Exiting @ tick 22500 because exiting with last active thread context
