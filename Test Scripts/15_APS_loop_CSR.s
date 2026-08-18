@@ -32,11 +32,20 @@ csrw aptar, t1
 la t1, trigger
 csrw aptrig, t1
 
-li a0, 0
+li t3, 0
 li t0, 0
 
 trigger:
-	add a0, a0, t0
+	add t3, t3, t0
 
+li t0, 9
+beq t0, t3, success
+
+li a0, 1
 li a7, 93
 ecall
+
+success:
+	li a0, 0
+	li a7, 93
+	ecall
