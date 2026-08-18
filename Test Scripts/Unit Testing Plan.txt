@@ -1,60 +1,86 @@
 Here's a test matrix, organized roughly from "core mechanics" outward to edge cases. Since you're deferring privilege mask and Rev/APCnt, I've kept those separate at the end.
 
+ISA modifications (rev 2): the `pending` flag is removed from APCTRL (bit 1 now reserved), and anticipation/apret no longer clear/set APIE. APIE is software-managed only; whether an AP fires — including inside a handler — is governed by that AP's `active` flag alone. apret is reduced to PC <- APEPC. Items affected are annotated below.
+
 **Trigger semantics**
 
-1. Preemption fires when PC matches APTRIG and the AP is active (your barebones test).
-2. Preemption fires *before* the trigger instruction executes — verify no architectural side effects from the anticipated instruction (destination register unchanged, no memory write, no CSR effect if the trigger is a CSR op).
-3. No preemption when `active` = 0, even with PC match.
-4. No preemption when APIE = 0, even with the AP active.
-5. Trigger address reached by different control paths: fall-through, forward branch, backward branch (loop), `jal`/`jalr`, and as a branch *target* — all should fire identically.
+1. Preemption fires when PC matches APTRIG and the AP is active (your barebones test). (done)
+2. Preemption fires *before* the trigger instruction executes — verify no architectural side effects from the anticipated instruction (destination register unchanged, no memory write, no CSR effect if the trigger is a CSR op). (done)
+3. No preemption when `active` = 0, even with PC match. (done)
+4. No preemption when APIE = 0, even with the AP active. [ISA mod: APIE remains a valid global gate; the only change is that hardware never toggles it. Test unchanged.] (done)
+5. Trigger address reached by different control paths — all should fire identically. Fall-through is covered by 1.
+   5a. Reached by forward branch. (done)
+   5b. Reached by backward branch (loop). (done)
+   5c. Reached by `jal`. (done)
+   5d. Reached by `jalr`. (done)
 6. PC *near* but not equal to APTRIG (e.g., trigger+4, or an address inside a compressed pair if you support RVC) does not fire. If RVC is in scope: what happens when APTRIG points at the second half of a 4-byte instruction.
-7. Trigger on the very first instruction after `_start`, and trigger address = target address (pathological but should be defined).
+7. Pathological trigger placements:
+   7a. Trigger address = target address. (done — but re-run after ISA mod: with APIE no longer cleared on entry, trig==tar is architecturally recursive unless the handler breaks it; see 38.)
+   7b. Trigger on the very first instruction after `_start`.
 
 **Preemption side effects (the atomic bundle)**
 
-8. `pending` is set on trigger, readable in the handler, and is read-only — writes from software are ignored (or trap, per your spec — but pick one and test it).
-9. APIE is cleared on entry (no nested anticipation while in the handler).
+8. [OBSOLETE — ISA mod: `pending` removed. Bit 1 read-as-reserved folds into 28. Retire 08 script.]
+9. [REWORK — ISA mod: APIE is *not* cleared on entry. Inverted test: read APSTATUS inside the handler and verify APIE unchanged. Nesting suppression is gone by design; handler discipline is tested in 38.]
 10. APEPC holds the trigger address (not trigger+4, not the target).
-11. APLASTEX holds the index of the firing AP — meaningful once you test with two APs (see below).
+11. APLASTEX holds the index of the firing AP — meaningful once you test with two APs (see below). (done)
 12. All GPRs are untouched by the preemption itself — the handler sees exactly the interrupted thread's state.
 
 **APRET semantics**
 
-13. `apret` atomically: clears `pending`, sets APIE, sets PC = APEPC. Verify each individually (e.g., read pending from post-return code path via a second AP, or check APIE after return).
-14. After `apret` with APS set: the trigger instruction executes exactly once, and APS is cleared by that execution (read APCTRL afterward to confirm the hardware reset it).
-15. After `apret` with APS clear: immediate re-trigger, handler re-entered, no execution of the trigger instruction (your loop test — but explicitly verify t0's increment count vs. a0's contribution to distinguish "executed n times" from "executed once after n bounces").
-16. APS admits exactly one execution: after the admitted execution, if PC reaches the trigger again (loop), it preempts again. Your loop test partially covers this; a two-iteration outer loop covers it fully.
+13. apret behavior, verified individually. [ISA mod: apret = PC <- APEPC, nothing else.]
+   13a. PC is set to APEPC. (done)
+   13b. [REWORK — was "apret sets APIE=1"; inverted: apret does NOT modify APIE, in both the APIE=1 and APIE=0 software states.]
+   13c. [OBSOLETE — was "apret clears pending". Retire; its cold-apret skeleton is reusable for 18.]
+14. After `apret` with APS set: the trigger instruction executes exactly once, and APS is cleared by that execution (read APCTRL afterward to confirm the hardware reset it). (done)
+15. After `apret` with APS clear: immediate re-trigger, handler re-entered, no execution of the trigger instruction — explicitly verify t0's increment count vs. a0's contribution to distinguish "executed n times" from "executed once after n bounces". (functional pass; rework exits to 0-on-success convention)
+16. APS admits exactly one execution: after the admitted execution, if PC reaches the trigger again (loop), it preempts again.
+   16a. Two-iteration outer loop: preempt, admit once, preempt again on next arrival. (failing — open bug: `active` reads 0 after the admitted execution)
+   16b. Diagnostic variant isolating where `active` is lost (on preempt, on apret, or on consume). (failing — same bug; neither variant can yet distinguish apret from consume as the culprit)
 17. Handler modifies APEPC before `apret` → execution resumes at the new address (the "redirect to scheduler" path from the proposal). Verify the trigger instruction did *not* execute in this case.
-18. `apret` executed outside of a pending anticipation (cold, from normal code) — decide and verify the behavior: no-op, illegal instruction, or jump to stale APEPC. This will bite you later if undefined.
+18. `apret` executed outside of a pending anticipation (cold, from normal code) — decide and verify the behavior. (de facto answer from the old 13c run: jumps to stale APEPC, no trap — needs a spec sentence and a dedicated test)
 19. APS set manually by software *before* any trigger: first PC match should execute the instruction and clear APS without ever entering the handler (bypass semantics). If that's not the intent, define what is.
 
 **APSCRATCH**
 
-20. Write in handler, read after return; write outside handler, read inside — plain read/write round-trip, survives apret.
+20. Write in handler, read after return; write outside handler, read inside — plain read/write round-trip, survives apret. [Gains importance under the ISA mod: APSCRATCH is the natural save slot for APEPC in nestable handlers; see 37.]
 
 **APSELECT / multiple APs**
 
-21. APSELECT redirects APCTRL/APTRIG/APTAR — write AP0's registers, switch to AP1, verify reads don't see AP0's values, switch back, verify AP0's values persisted.
-22. Two APs active with different triggers: each fires independently, APLASTEX distinguishes them.
-23. AP1's trigger located *inside* AP0's handler: since APIE is cleared during the handler, it must not fire — but should it fire after `apret` restores APIE if execution later passes that address? Define and test.
-24. Two APs with the *same* trigger address: which fires, or both in sequence? Needs a defined priority (e.g., lowest index) and a test pinning it.
-25. Out-of-range APSELECT index: reads/writes to the windowed CSRs should do something defined (zero, ignore, trap).
-26. Changing APSELECT while an AP is pending doesn't corrupt the pending AP's state.
+21. APSELECT redirects APCTRL/APTRIG/APTAR — write AP0's registers, switch to AP1, verify reads don't see AP0's values, switch back, verify AP0's values persisted. (done)
+22. Two APs active with different triggers: each fires independently, APLASTEX distinguishes them. (done)
+23. AP1's trigger located *inside* AP0's handler. [ISA mod flips the expectation: AP1 FIRES if AP1 is active — `active` alone governs. Reworked as 36/37.]
+24. Two APs with the *same* trigger address: which fires, or both in sequence? Needs a defined priority (e.g., lowest index) and a test pinning it. (done — document the pinned priority in the spec, not just the test)
+25. Out-of-range APSELECT index: reads/writes to the windowed CSRs should do something defined (zero, ignore, trap). (done)
+26. Changing APSELECT while another AP is mid-anticipation (between fire and apret) doesn't corrupt that AP's state. [Reworded — original said "while pending".] (note: the script named 26_All_Lanes_Active covers 40b below, not this item)
 
 **CSR access mechanics**
 
-27. All Zicsr op flavors against your CSRs: csrrw/csrrs/csrrc and immediate forms — especially set/clear-bit ops on APCTRL, since the semaphore workflow depends on read-modify-write behavior against a register with a read-only bit (pending) in the middle.
-28. Reserved bits of APCTRL and APSTATUS: write ones, read back — should read as zero (WPRI/WARL behavior, whichever you've chosen).
-29. Read of APCTRL while pending=1 inside the handler returns the true hardware state (not a stale shadow).
+27. All Zicsr op flavors against your CSRs: csrrw/csrrs/csrrc and immediate forms. [ISA mod simplification: with pending gone, APCTRL has no read-only bits in the implemented set, so the RMW-around-a-read-only-bit hazard is gone; set/clear-bit flavors still need coverage since the handler workflow leans on them.]
+28. Reserved bits of APCTRL and APSTATUS: write ones, read back — should read as zero (WPRI/WARL behavior, whichever you've chosen). [Now explicitly includes APCTRL bit 1, ex-pending.]
+29. [OBSOLETE — was framed around reading pending mid-handler. General "mid-handler CSR reads are current" concern is covered by 16/16b and 27.]
 
 **Interaction with existing machinery**
 
-30. Anticipation vs. a real trap: trigger instruction is an `ecall` or an instruction that faults (misaligned load, access fault). Anticipation should win (fires before execution), and the fault should occur only on the admitted execution.
-31. A standard M-mode interrupt arriving while in the anticipation handler: does it preempt the handler, and does `mret` from *that* handler return correctly into your handler with anticipation state intact?
+30. Anticipation vs. a real trap: anticipation should win (fires before execution), and the trap should occur only on the admitted execution.
+   30a. Trigger instruction is an `ecall`. (done)
+   30b. Trigger instruction faults (misaligned load, access fault).
+31. A standard M-mode interrupt arriving while in the anticipation handler: does it preempt the handler, and does `mret` from *that* handler return correctly with anticipation state intact? [ISA mod note: trap-handler code can now cross a live trigger and fire an AP from inside the trap handler — decide whether trap handlers must clear APIE on entry as a software convention.]
 32. Trigger instruction is itself a branch/jump: after admitted execution, control flow follows the branch normally.
-33. Trigger instruction is a CSR write to one of the AP CSRs (self-referential; e.g., it disables its own AP). Pathological, but Gem5 will do *something* — better to know what.
+33. Trigger instruction is a CSR write to one of the AP CSRs (self-referential; e.g., it disables its own AP, or clears APIE). Pathological, but Gem5 will do *something* — better to know what.
 
-**Deferred (once you add them)**
+**Multiple simultaneous APs (new — consequences of the APIE mod)**
+
+36. Nested cross-AP fire: AP1's trigger inside AP0's handler, both active → AP1 fires mid-handler. Verify APEPC and APLASTEX are overwritten by the nested fire (single shared registers, by design).
+37. Nested round trip with handler discipline: AP0's handler saves APEPC (APSCRATCH or memory) before the nestable region, AP1 fires and aprets back into AP0's handler, AP0 restores APEPC and aprets to the original interrupted point. This is the save/restore contract the ISA mod pushes onto software, and the most BUNDLE-relevant test in the plan.
+38. Self-recursion: AP0's own trigger crossed from within its handler, active set, APS clear → immediate re-preemption (by design now). Guarded-depth count to confirm; companion run sets APS (or clears active) first → exactly one pass. Replaces the old 08 probe and subsumes the recursive half of 7a.
+39. Shared trigger under the new semantics (extends 24): two active lanes, same trigger. After the winner's apret returns to the shared address, the loser should fire before the instruction executes; the instruction executes only once every matching lane is satisfied via its own APS. Define and pin the sequence.
+40. APS independence across lanes:
+   40a. Setting APS on lane 0 does not admit lane 1's trigger (distinct triggers).
+   40b. All lanes armed simultaneously with distinct triggers: all fire and return correctly. (done — currently named 26_All_Lanes_Active; renumber the script)
+41. Handler reconfigures another AP: AP0's handler selects, configures, and arms AP1; AP1 fires correctly after return. This is the scheduler's actual usage pattern.
+
+**Lower-Priority**
 
 34. Privilege mask: AP active only in masked modes; PC match in an unmasked mode is transparent.
-35. APCnt/Rev: whatever multi-count semaphore semantics replace the one-bit APS — the loop test generalizes directly (set count n, expect n bypasses).
+35. APCnt and Rev (read-only info fields in APSTATUS): APCnt reports the number of anticipation points implemented in hardware — verify it reads the implemented lane count and that writes are ignored. Rev reports the hardware revision number — same read-only verification. Software should be able to probe both to adapt to the implementation.
