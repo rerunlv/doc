@@ -66,8 +66,8 @@ ISA modifications (rev 2): the `pending` flag is removed from APCTRL (bit 1 now 
    30a. Trigger instruction is an `ecall`. (done)
    30b. Trigger instruction faults (misaligned load, access fault).
 31. A standard M-mode interrupt arriving while in the anticipation handler: does it preempt the handler, and does `mret` from *that* handler return correctly with anticipation state intact? [ISA mod note: trap-handler code can now cross a live trigger and fire an AP from inside the trap handler — decide whether trap handlers must clear APIE on entry as a software convention.]
-32. Trigger instruction is itself a branch/jump: after admitted execution, control flow follows the branch normally.
-33. Trigger instruction is a CSR write to one of the AP CSRs (self-referential; e.g., it disables its own AP, or clears APIE). Pathological, but Gem5 will do *something* — better to know what.
+~~32. Trigger instruction is itself a branch/jump: after admitted execution, control flow follows the branch normally.~~
+~~33. Trigger instruction is a CSR write to one of the AP CSRs (self-referential; e.g., it disables its own AP, or clears APIE). Pathological, but Gem5 will do *something* — better to know what.~~
 
 **Multiple simultaneous APs (new — consequences of the APIE mod)**
 
