@@ -7,7 +7,10 @@
 # 
 # Exit codes:
 #   0 = PASS
-#   1  = No preemption
+#   1 = Failure to preempt AP0
+#   2 = Failure to preempt AP1
+
+
 
 .equ mach_active, 0x80000001
 
@@ -15,8 +18,9 @@
 
 target0:
     # Preemption successful
-    li a0, 0
+    li a0, 2
     li a7, 93
+trigger1:
     ecall
 	
 target1:
@@ -28,19 +32,32 @@ target1:
 _start:
 
     csrwi apstatus, 1
-
+	
+	# Initializing AP0
     csrwi apselect, 0
+
+    la t1, target0
+    csrw aptar, t1
+    
+    la t1, trigger0
+    csrw aptrig, t1
 
     li t1, mach_active
     csrw apctrl, t1
 
-    la t1, target
+	# Initializing AP1
+    csrwi apselect, 1
+
+    la t1, target1
     csrw aptar, t1
     
-    la t1, trigger
+    la t1, trigger1
     csrw aptrig, t1
 
-trigger:
+    li t1, mach_active
+    csrw apctrl, t1
+
+trigger0:
     # Failure to preempt
     li a0, 1
     li a7, 93
