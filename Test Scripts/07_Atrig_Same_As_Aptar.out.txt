@@ -9,10 +9,10 @@ gem5 Simulator System.  https://www.gem5.org
 gem5 is copyrighted software; use the --copyright option for details.
 
 gem5 version 25.1.0.1
-gem5 compiled Aug 17 2026 23:20:19
-gem5 started Aug 17 2026 23:43:58
-gem5 executing on RERUNLV, pid 6804
-command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs/deprecated/example/se.py -c ./07_Atrig_Same_As_Aptar.elf
+gem5 compiled Aug 31 2026 08:30:37
+gem5 started Aug 31 2026 16:04:15
+gem5 executing on Tims-MacBook, pid 162203
+command line: /home/tim/gem5/build/RISCV/gem5.opt /home/tim/gem5/configs/deprecated/example/se.py -c ./07_Atrig_Same_As_Aptar.elf
 
 **** REAL SIMULATION ****
   -> Lane 0: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
@@ -97,4 +97,52 @@ command line: /home/rerunlv/gem5/build/RISCV/gem5.opt /home/rerunlv/gem5/configs
   -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
   -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
   *** TRIGGER MATCHED! Redirecting to 0x100d8 ***
-Exiting @ tick 10500 because exiting with last active thread context
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 0: Ctrl = 0x80000001 | Trig = 0x100d8 | Tar = 0x100d8
+  -> Lane 1: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 2: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 3: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 4: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 5: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 6: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+  -> Lane 7: Ctrl = 0x0 | Trig = 0x0 | Tar = 0x0
+Exiting @ tick 9500 because exiting with last active thread context
