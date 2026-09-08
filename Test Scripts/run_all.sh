@@ -7,8 +7,12 @@ export PATH=/opt/riscv/bin:$PATH
 TIMEOUT_DURATION="30s"
 GEM5_BIN="$HOME/gem5/build/RISCV/gem5.opt"
 GEM5_CFG="$HOME/gem5/configs/deprecated/example/se.py"
-SUMMARY_LOG="results.txt"
 TARGET_DIR="${1:-.}"
+OUT_DIR="$TARGET_DIR/out"
+SUMMARY_LOG="$OUT_DIR/results.txt"
+
+# Ensure output directory exists
+mkdir -p "$OUT_DIR"
 
 # Check binaries
 if [ ! -f "$GEM5_BIN" ] || [ ! -f "$GEM5_CFG" ]; then
@@ -33,9 +37,9 @@ echo "Found ${#asm_files[@]} assembly file(s). Starting execution..."
 
 for src_file in "${asm_files[@]}"; do
     filename=$(basename "$src_file")
-    basename_no_ext="${src_file%.*}"
-    elf_file="${basename_no_ext}.elf"
-    out_file="${basename_no_ext}.out.txt"
+    basename_no_ext="${filename%.*}"
+    elf_file="$OUT_DIR/${basename_no_ext}.elf"
+    out_file="$OUT_DIR/${basename_no_ext}.out.txt"
 
     echo "----------------------------------------"
     echo "Processing: $filename"

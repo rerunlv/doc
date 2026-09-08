@@ -1,3 +1,0 @@
-/opt/riscv/riscv64-unknown-elf/bin/ld: /tmp/cc1ycKKJ.o: in function `_start':
-(.text+0x28): undefined reference to `target'
-collect2: error: ld returned 1 exit status

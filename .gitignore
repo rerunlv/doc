@@ -1,2 +1,7 @@
 /.obsidian
 /Test Scripts/m5out
+/Test Scripts/out/
+*.elf
+*.out.txt
+results.txt
+

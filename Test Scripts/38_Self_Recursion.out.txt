@@ -1,4 +1,0 @@
-/tmp/cc1u0UiT.s: Assembler messages:
-./38_Self_Recursion.S:23: Error: unknown pseudo-op: `.'
-./38_Self_Recursion.S:26: Error: unknown pseudo-op: `.'
-./38_Self_Recursion.S:33: Error: illegal operands `andi t4,t1,active_mask'
