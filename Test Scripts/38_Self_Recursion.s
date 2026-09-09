@@ -1,9 +1,10 @@
 .text
 
 .equ mach_inactive, 	0x80000000		# Here, the '8' represents a one in the M position of APCTRL
-.equ mach_active, 		0x80000001		# The '0' is the "active" bit of APCTRL
-.equ aps_mask,			0x00000002		# This is the bitmask for the semaphore of the anticipation point.
-.equ mach_act_sem, 		0x80000005		# This is the & of aps_mask and mach_active
+.equ mach_active, 		0x80000001		# The '1' is the "active" bit of APCTRL
+.equ active_mask,		0x00000001
+.equ aps_mask,			0x00000004		# Bit 2 is APS semaphore in Rev 2
+.equ mach_act_sem, 		0x80000005		# M-mode | APS | active
 
 target:									# Handler Address
 	addi t0, t0, 1
@@ -20,10 +21,10 @@ skip:
 
 trigger:
     add t3, t3, t0
-.
+
     li t1, 9
     bne t0, t1, early_trigger_failure
-.
+
     bne t3, t1, result_failure
 
     csrr t1, apctrl
