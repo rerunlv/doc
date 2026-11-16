@@ -1,6 +1,4 @@
-Here's a test matrix, organized roughly from "core mechanics" outward to edge cases. Since you're deferring privilege mask and Rev/APCnt, I've kept those separate at the end.
-
-ISA modifications (rev 2): the `pending` flag is removed from APCTRL (bit 1 now reserved), and anticipation/apret no longer clear/set APIE. APIE is software-managed only; whether an AP fires — including inside a handler — is governed by that AP's `active` flag alone. apret is reduced to PC <- APEPC. Items affected are annotated below.
+# Unit Testing
 
 **Trigger semantics**
 
