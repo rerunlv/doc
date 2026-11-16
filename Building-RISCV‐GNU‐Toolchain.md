@@ -17,7 +17,6 @@ sudo pacman -Syu curl python3 libmpc mpfr gmp base-devel texinfo gperf patchutil
 ```
 
 ### Clone and make toolchain
-
 ```
 sudo echo something 
 
@@ -35,7 +34,6 @@ sudo make -j$(nproc)
 ```
 
 ### Rebuilding binutils-gdb specifically
-
 ```
 
 sudo rm -f stamps/build-binutils-newlib
@@ -45,7 +43,6 @@ sudo make -j$(nproc) stamps/build-binutils-newlib
 
 
 ### switching to `ant` branch from `master`
-
 ``` 
 
 cd binutils-gdb
